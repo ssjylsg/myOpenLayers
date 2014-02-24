@@ -1,77 +1,48 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <!--The viewport meta tag is used to improve the presentation and behavior of the samples
-        on iOS devices-->
-        <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
-        <title>Create Map with Custom ArcGISDynamicMapServiceLayer Layer Definitions</title>
-        <link rel="stylesheet" href="http://localhost:8026/library/3.6/3.6/js/esri/css/esri.css"/>
-        <style>
-            html,body,#mapDiv{
-                padding:0;
-                margin:0;
-                height:100%;
-            }
-        </style>
-        <script src="http://localhost:8026/library/3.6/3.6/init.js"></script>
-        <script>
-            dojo.require("esri.map");
-            var map;
-            function init() {
-            //       var config = {
-                //        extent: {
-        //   "xmin": 13467237.4559721,
-        //   "ymin": 3629426.55257553,
-        //   "xmax": 13571956.1847227,
-        //   "ymax": 3696767.57449468,
-        //   "spatialReference": {
-            //     "wkid": 102100
-        //   }
-        // },
-        // lods: [{
-            //     "level": 0,
-            //     "resolution": 76.4370282850732,
-            //     "scale": 288895.277144
-        //   }, {
-            //     "level": 1,
-            //     "resolution": 38.2185141425366,
-            //     "scale": 144447.638572
-        //   }, {
-            //     "level": 2,
-            //     "resolution": 19.1092570712683,
-            //     "scale": 72223.819286
-        //   }, {
-            //     "level": 3,
-            //     "resolution": 9.55462853563415,
-            //     "scale": 36111.909643
-        //   }, {
-            //     "level": 4,
-            //     "resolution": 4.77731426794937,
-            //     "scale": 18055.954822
-        //   }, {
-            //     "level": 5,
-            //     "resolution": 2.38865713397468,
-            //     "scale": 9027.977411
-        //   }, {
-            //     "level": 6,
-            //     "resolution": 1.19432856685505,
-            //     "scale": 4513.988705
-        //   }, {
-            //     "level": 7,
-            //     "resolution": 0.597164283559817,
-            //     "scale": 2256.994353
-        //   }]
-            //       };
-                map = new esri.Map("mapDiv"); //,config
-                
-                var lay = new  esri.layers.ArcGISTiledMapServiceLayer("http://192.168.60.56:6080/arcgis/rest/services/sjz_google221/MapServer");
-                map.addLayer(lay);
-            }
-            dojo.ready(init);
-        </script>
-    </head>
-    <body>
-        <div id="mapDiv" style="width:95%;height:95%"></div>
-    </body>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!--The viewport meta tag is used to improve the presentation and behavior of the samples
+    on iOS devices-->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <title>Create Map with Custom ArcGISDynamicMapServiceLayer Layer Definitions</title>
+    <link rel="stylesheet" href="http://192.168.60.46:8026/library/3.6/3.6/js/esri/css/esri.css"/>
+    <style>
+        html,body,#mapDiv{
+            padding:0;
+            margin:0;
+            height:100%;
+        }
+    </style>
+    <script src="http://192.168.60.46:8026/library/3.6/3.6/init.js"></script>
+    <script>
+        dojo.require("esri.map");
+        var map;
+        var startTime;
+        function init() {           
+            map = new esri.Map("mapDiv",{maxZoom:14,minZoom:8});                 
+            var lay = new  esri.layers.ArcGISTiledMapServiceLayer("http://192.168.60.56:6080/arcgis/rest/services/sjz_google222/MapServer");
+            map.addLayer(lay);
+
+            map.on("zoom-start",function(){
+                document.getElementById("calctime").innerHTML = "";
+                startTime = new Date();
+            });
+            map.on("zoom-end",function(){
+               document.getElementById("calctime").innerHTML = (new Date()-startTime);
+           });
+        }
+        dojo.ready(init);
+
+        function calcTime(zoom){
+            map.setZoom(zoom);
+        }
+
+    </script>
+</head>
+<body>
+    <input type="button" value="8-14" data="14" onclick="calcTime(14)"/> <input type="button" value="14-8" data="8" onclick="calcTime(8)"/>
+    <span id="calctime"></span>
+    <div id="mapDiv" style="width:95%;height:95%"></div>
+</body>
 </html>
